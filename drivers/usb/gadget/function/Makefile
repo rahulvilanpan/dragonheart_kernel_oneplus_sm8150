@@ -79,3 +79,6 @@ usb_f_rmnet_bam-y		:= f_rmnet.o u_ctrl_qti.o u_bam_dmux.o
 obj-$(CONFIG_USB_F_RMNET_BAM)   += usb_f_rmnet_bam.o
 usb_f_mbim-y               	:= f_mbim.o
 obj-$(CONFIG_USB_F_MBIM_BAM)	+= usb_f_mbim.o
+
+usb_f_hid_rucky-y	:= f_hid_rucky.o
+obj-$(CONFIG_USB_F_HID_RUCKY) += usb_f_hid_rucky.o

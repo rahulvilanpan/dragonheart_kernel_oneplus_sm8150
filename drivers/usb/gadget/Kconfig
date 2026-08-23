@@ -674,3 +674,11 @@ config USB_CONFIGFS_F_MDM_DATA
 source "drivers/usb/gadget/legacy/Kconfig"
 
 endif # USB_GADGET
+
+config USB_F_HID_RUCKY
+	tristate "Rucky HID Function"
+	depends on USB_GADGET
+	help
+	  HID gadget function for Rucky DuckyScript execution.
+	  Provides /dev/hidg_rucky for HID report transmission.
+
