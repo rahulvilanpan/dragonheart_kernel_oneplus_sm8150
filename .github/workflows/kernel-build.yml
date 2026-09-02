@@ -1,0 +1,59 @@
+name: Build DragonHeart Kernel with HID Module
+
+on:
+  push:
+    branches:
+      - hid-module
+      - myrepo/hid-module
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Verify HID Branch
+        run: |
+          if [[ "$GITHUB_REF" != "refs/heads/hid-module" && "$GITHUB_REF" != "refs/heads/myrepo/hid-module" ]]; then
+            echo "❌ Build only runs on hid-module branch!"
+            exit 1
+          fi
+          echo "✅ Building from HID module branch"
+      
+      - name: Setup Build Environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential bc curl wget git zip unzip
+      
+      - name: Build Kernel with HID Module
+        run: |
+          cd ${{ github.workspace }}
+          export TERM=xterm
+          export ci=1
+          export kver=r16b7
+          export zipn=DragonHeart-op7-r16b7-with-hid
+          bash ./kramel.sh img dtb mod mkzip
+      
+      - name: Upload Kernel Artifact
+        uses: actions/upload-artifact@v3
+        if: success()
+        with:
+          name: DragonHeart-Kernel-r16b7-HID
+          path: |
+            out/DragonHeart-op7-r16b7-with-hid.zip
+            out/arch/arm64/boot/modules/f_hid_rucky.ko
+          retention-days: 30
+      
+      - name: Build Summary
+        if: success()
+        run: |
+          echo "✅ Kernel build completed successfully!"
+          echo "📦 Artifacts ready for download:"
+          ls -lh out/DragonHeart-op7-r16b7-with-hid.zip
+          ls -lh out/arch/arm64/boot/modules/f_hid_rucky.ko
