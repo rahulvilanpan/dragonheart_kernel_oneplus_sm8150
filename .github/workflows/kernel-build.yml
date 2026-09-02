@@ -29,7 +29,10 @@ jobs:
       - name: Setup Build Environment
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential bc curl wget git zip unzip python2
+          sudo apt-get install -y software-properties-common
+          sudo add-apt-repository -y ppa:deadsnakes/ppa
+          sudo apt-get update
+          sudo apt-get install -y build-essential bc curl wget git zip unzip python2.7
       
       - name: Build Kernel with HID Module
         run: |
