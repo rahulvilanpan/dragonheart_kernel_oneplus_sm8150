@@ -28,8 +28,10 @@ jobs:
             libssl-dev \
             libelf-dev
 
-      - name: Build Kernel
+      - name: Build Kernel (with reduced parallelism for WiFi driver)
         run: |
+          # Reduce -j128 to -j4 in kramel.sh for memory efficiency
+          sed -i 's/make -j128/make -j4/g' kramel.sh
           TERM=xterm ci=1 kver=r16b7 zipn=DragonHeart-op7-r16b7-with-hid \
             timeout 7200 ./kramel.sh img dtb mod mkzip
 
