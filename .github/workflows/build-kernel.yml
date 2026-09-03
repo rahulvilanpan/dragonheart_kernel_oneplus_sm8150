@@ -1,0 +1,58 @@
+name: Build DragonHeart Kernel
+
+on:
+  push:
+    branches: [hid-module-v2]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            python3 \
+            python3-dev \
+            libxml2-dev \
+            bc \
+            bison \
+            flex \
+            libssl-dev \
+            libelf-dev
+
+      - name: Build Kernel
+        run: |
+          TERM=xterm ci=1 kver=r16b7 zipn=DragonHeart-op7-r16b7-with-hid \
+            timeout 7200 ./kramel.sh img dtb mod mkzip
+
+      - name: Check Build Output
+        if: always()
+        run: |
+          echo "=== Build Artifacts ==="
+          ls -lh DragonHeart*.zip 2>/dev/null || echo "No ZIP found"
+          ls -lh out/arch/arm64/boot/Image 2>/dev/null || echo "No kernel image"
+          ls -lh out/drivers/usb/gadget/function/usb_f_hid_rucky.ko 2>/dev/null || echo "No HID module"
+
+      - name: Upload Kernel ZIP
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: DragonHeart-kernel
+          path: DragonHeart-op7-r16b7-with-hid.zip
+          retention-days: 30
+
+      - name: Upload Build Log
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-log
+          path: build_final.log
+          retention-days: 30
