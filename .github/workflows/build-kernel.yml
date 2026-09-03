@@ -26,12 +26,16 @@ jobs:
             bison \
             flex \
             libssl-dev \
-            libelf-dev
+            libelf-dev \
+            device-tree-compiler \
+            libfdt-dev \
+            pkg-config
 
       - name: Build Kernel (with reduced parallelism for WiFi driver)
         run: |
           # Reduce -j128 to -j4 in kramel.sh for memory efficiency
           sed -i 's/make -j128/make -j4/g' kramel.sh
+          # Build: img (kernel), dtb (device tree), mod (modules), mkzip (flashable zip)
           TERM=xterm ci=1 kver=r16b7 zipn=DragonHeart-op7-r16b7-with-hid \
             timeout 7200 ./kramel.sh img dtb mod mkzip
 
