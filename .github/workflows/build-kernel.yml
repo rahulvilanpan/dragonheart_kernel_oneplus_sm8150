@@ -26,7 +26,6 @@ jobs:
             bison \
             flex \
             libssl-dev \
-            libssl1.1 \
             libelf-dev \
             device-tree-compiler \
             libfdt-dev \
