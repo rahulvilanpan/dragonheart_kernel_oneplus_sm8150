@@ -17,27 +17,17 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-            build-essential \
-            python3 \
-            python3-dev \
-            libxml2-dev \
-            bc \
-            bison \
-            flex \
-            libssl-dev \
-            libelf-dev \
-            device-tree-compiler \
-            libfdt-dev \
-            pkg-config
+          sudo apt-get install -y             build-essential             python3             python3-dev             libxml2-dev             bc             bison             flex             libssl-dev             libelf-dev             device-tree-compiler             libfdt-dev             pkg-config
 
       - name: Build Kernel (with reduced parallelism for WiFi driver)
         run: |
+          # Configure git identity for kramel.sh to clone op7_json
+          git config --global user.email "builder@github.com"
+          git config --global user.name "GitHub Actions Builder"
           # Reduce -j128 to -j4 in kramel.sh for memory efficiency
           sed -i 's/make -j128/make -j4/g' kramel.sh
           # Build: img (kernel), dtb (device tree), mod (modules), mkzip (flashable zip)
-          TERM=xterm ci=1 kver=r16b7 zipn=DragonHeart-op7-r16b7-with-hid \
-            timeout 7200 ./kramel.sh img dtb mod mkzip
+          TERM=xterm ci=1 kver=r16b7 zipn=DragonHeart-op7-r16b7-with-hid             timeout 7200 ./kramel.sh img dtb mod mkzip
 
       - name: Check Build Output
         if: always()
