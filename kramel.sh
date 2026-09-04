@@ -289,8 +289,8 @@ mkzip() {
     zip -r9 "$zipn".zip . -x ".git*" -x "README.md" -x "LICENSE" -x "*.zip"
     echo -e "\n\e[1;32m[✓] Built zip! \e[0m"
     if [[ "${ci}" == "1" ]]; then
-	git clone https://github.com/rahulvilanpan/op7_json.git
-	cd op7_json || exit 1
+	git clone https://github.com/rahulvilanpan/op7_json.git 2>/dev/null ||
+	cd op7_json 2>/dev/null || { echo "Skipping op7_json metadata"; mkdir -p op7_json; }
 	echo "https://cyberknight777:$PASSWORD@github.com" > .pwd
 	git config credential.helper "store --file .pwd"
 	sha1=$(sha1sum ../"${zipn}".zip | cut -d ' ' -f1)
