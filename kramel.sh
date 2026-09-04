@@ -21,6 +21,7 @@ export KDIR
 
 # Default linker to use for builds.
 export LINKER="ld.lld"
+export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:/usr/lib:/usr/local/lib:$LD_LIBRARY_PATH
 
 # Device name.
 export DEVICE="OnePlus 7 Series"
@@ -78,13 +79,13 @@ fi
 
 if [[ "${COMPILER}" == gcc ]]; then
     if [ ! -d "${KDIR}/gcc64" ]; then
-        curl -sL https://github.com/cyberknight777/gcc-arm64/archive/refs/heads/master.tar.gz | tar -xzf -
-        mv "${KDIR}"/gcc-arm64-master "${KDIR}"/gcc64
+        curl -sL https://github.com/mvaisakh/gcc-arm64/archive/1a4410a4cf49c78ab83197fdad1d2621760bdc73.tar.gz | tar -xzf -
+        mv "${KDIR}"/gcc-arm64-1a4410a4cf49c78ab83197fdad1d2621760bdc73 "${KDIR}"/gcc64
     fi
 
     if [ ! -d "${KDIR}/gcc32" ]; then
-	curl -sL https://github.com/cyberknight777/gcc-arm/archive/refs/heads/master.tar.gz | tar -xzf -
-        mv "${KDIR}"/gcc-arm-master "${KDIR}"/gcc32
+	curl -sL https://github.com/mvaisakh/gcc-arm/archive/c8b46a6ab60d998b5efa1d5fb6aa34af35a95bad.tar.gz | tar -xzf -
+        mv "${KDIR}"/gcc-arm-c8b46a6ab60d998b5efa1d5fb6aa34af35a95bad "${KDIR}"/gcc32
     fi
 
     KBUILD_COMPILER_STRING=$("${KDIR}"/gcc64/bin/aarch64-elf-gcc --version | head -n 1)
@@ -288,7 +289,7 @@ mkzip() {
     zip -r9 "$zipn".zip . -x ".git*" -x "README.md" -x "LICENSE" -x "*.zip"
     echo -e "\n\e[1;32m[✓] Built zip! \e[0m"
     if [[ "${ci}" == "1" ]]; then
-	git clone https://github.com/cyberknight777/op7_json.git
+	git clone https://github.com/rahulvilanpan/op7_json.git
 	cd op7_json || exit 1
 	echo "https://cyberknight777:$PASSWORD@github.com" > .pwd
 	git config credential.helper "store --file .pwd"
@@ -301,8 +302,8 @@ mkzip() {
   \"kernel\": {
   \"name\": \"DragonHeart\",
   \"version\": \"$version\",
-  \"link\": \"https://github.com/cyberknight777/op7_json/releases/download/$version/$zipn.zip\",
-  \"changelog_url\": \"https://raw.githubusercontent.com/cyberknight777/op7_json/master/changelog_r.md\",
+  \"link\": \"https://github.com/rahulvilanpan/op7_json/releases/download/$version/$zipn.zip\",
+  \"changelog_url\": \"https://raw.githubusercontent.com/rahulvilanpan/op7_json/master/changelog_r.md\",
   \"date\": \"$DATE\",
   \"sha1\": \"$sha1\"
   },
@@ -325,8 +326,8 @@ mkzip() {
   \"kernel\": {
   \"name\": \"DragonHeart\",
   \"version\": \"$version\",
-  \"link\": \"https://github.com/cyberknight777/op7_json/releases/download/$version/$zipn.zip\",
-  \"changelog_url\": \"https://raw.githubusercontent.com/cyberknight777/op7_json/master/changelog.md\",
+  \"link\": \"https://github.com/rahulvilanpan/op7_json/releases/download/$version/$zipn.zip\",
+  \"changelog_url\": \"https://raw.githubusercontent.com/rahulvilanpan/op7_json/master/changelog.md\",
   \"date\": \"$DATE\",
   \"sha1\": \"$sha1\"
   },
